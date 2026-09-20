@@ -1,0 +1,21 @@
+{
+  "name": "bandhan-events-platform",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Bandhan Events — public website, admin platform and API",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @bandhan/web",
+    "dev:web": "npm run dev -w @bandhan/web",
+    "dev:api": "npm run dev -w @bandhan/api",
+    "build": "npm run build -w @bandhan/web",
+    "typecheck": "npm run typecheck -ws --if-present",
+    "images": "npm run images -w @bandhan/web",
+    "seed": "npm run seed -w @bandhan/api",
+    "verify:api": "npm run verify -w @bandhan/api"
+  }
+}

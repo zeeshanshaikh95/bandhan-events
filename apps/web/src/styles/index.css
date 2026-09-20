@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-ivory text-charcoal font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-forest text-ivory;
+  }
+
+  /* Visible, brand-consistent focus states for keyboard users */
+  :focus-visible {
+    outline: 2px solid theme("colors.gold.DEFAULT");
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8 lg:px-10;
+  }
+
+  /* Small uppercase label used above headings */
+  .eyebrow {
+    @apply font-sans text-[11px] font-semibold uppercase tracking-label text-gold-deep;
+  }
+
+  .eyebrow-light {
+    @apply font-sans text-[11px] font-semibold uppercase tracking-label text-gold-soft;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 font-sans text-[12px] font-semibold uppercase tracking-widest2 transition-colors duration-300;
+  }
+
+  .btn-solid {
+    @apply btn bg-forest text-ivory hover:bg-forest-mid;
+  }
+
+  .btn-gold {
+    @apply btn bg-gold text-forest-dark hover:bg-gold-deep hover:text-ivory;
+  }
+
+  .btn-outline {
+    @apply btn border border-forest/30 text-forest hover:border-forest hover:bg-forest hover:text-ivory;
+  }
+
+  .btn-outline-light {
+    @apply btn border border-ivory/40 text-ivory hover:border-ivory hover:bg-ivory hover:text-forest;
+  }
+
+  .rule-gold {
+    @apply h-px w-12 bg-gold/60;
+  }
+
+  /* Editorial link with animated underline */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: "";
+    @apply absolute -bottom-1 left-0 h-px w-0 bg-gold transition-all duration-300;
+  }
+
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    @apply w-full;
+  }
+
+  .surface-card {
+    @apply border border-forest/10 bg-ivory-soft;
+  }
+}
+
+@layer utilities {
+  .bg-grain {
+    background-image: radial-gradient(rgba(23, 37, 29, 0.04) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .bg-grain-light {
+    background-image: radial-gradient(rgba(247, 243, 234, 0.05) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+
+  /* Safe-area padding for fixed bottom UI on notched phones */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}

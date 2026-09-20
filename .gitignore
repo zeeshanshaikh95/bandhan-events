@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+
+# Env files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# Freebuff local tooling state
+.freebuff/

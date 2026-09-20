@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17251D"/>
+      <stop offset="1" stop-color="#24362B"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <rect x="56" y="56" width="1088" height="518" fill="none" stroke="#B08A45" stroke-opacity="0.55" stroke-width="1.5"/>
+  <rect x="72" y="72" width="1056" height="486" fill="none" stroke="#D6C19A" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="600" y="255" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="110" letter-spacing="14" fill="#F7F3EA">BANDHAN</text>
+  <text x="600" y="325" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="44" letter-spacing="30" fill="#B08A45">EVENTS</text>
+  <line x1="470" y1="368" x2="730" y2="368" stroke="#B08A45" stroke-opacity="0.6" stroke-width="1.5"/>
+  <text x="600" y="418" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="22" letter-spacing="6" fill="#D6C19A">CELEBRATIONS FOR A LIFETIME</text>
+  <text x="600" y="470" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="18" letter-spacing="4" fill="#F7F3EA" opacity="0.75">DECORATORS · BANQUET &amp; CATERING · MULUND WEST, MUMBAI</text>
+</svg>

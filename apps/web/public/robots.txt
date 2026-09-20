@@ -1,0 +1,9 @@
+# robots.txt for Bandhan Events
+User-agent: *
+Allow: /
+
+# The staff dashboard is private and must never be indexed.
+Disallow: /admin
+Disallow: /admin/
+
+Sitemap: https://bandhanevents.in/sitemap.xml
