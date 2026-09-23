@@ -34,6 +34,12 @@ export const seoByRoute: Record<string, SeoData> = {
       "Wedding decoration, stage design, floral styling, venue styling, lighting and mandap setup by Bandhan Events — event decorators serving Mulund and Mumbai.",
     path: "/decorators",
   },
+  "/build-your-stage": {
+    title: "Build Your Own Stage | Stage Design Tool — Bandhan Events",
+    description:
+      "Design your own wedding or event stage online — choose the layout, backdrop, flowers, lighting and seating, preview it live and request a quotation from Bandhan Events in Mulund West, Mumbai.",
+    path: "/build-your-stage",
+  },
   "/banquet-catering": {
     title: "Banquet Hall & Catering in Mulund West, Mumbai | Bandhan Events",
     description:

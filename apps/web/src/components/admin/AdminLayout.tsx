@@ -1,14 +1,24 @@
 import { Suspense, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
+  BarChart3,
+  Calendar,
   ClipboardList,
+  CreditCard,
   ExternalLink,
+  FileSpreadsheet,
+  FileText,
+  IndianRupee,
   LayoutDashboard,
   LogOut,
   Menu,
+  PiggyBank,
+  Receipt,
   ScrollText,
   Settings,
+  Store,
   Users,
+  UsersRound,
   X,
 } from "lucide-react";
 import { ROLE_LABELS, type Permission } from "@bandhan/shared";
@@ -32,6 +42,17 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", to: "/admin", icon: LayoutDashboard, permission: "dashboard:read", end: true },
   { label: "Leads", to: "/admin/leads", icon: ClipboardList, permission: "leads:read" },
+  { label: "Customers", to: "/admin/customers", icon: UsersRound, permission: "customers:read" },
+  { label: "Quotations", to: "/admin/quotations", icon: FileText, permission: "quotations:read" },
+  { label: "Invoices", to: "/admin/invoices", icon: FileSpreadsheet, permission: "invoices:read" },
+  { label: "Events", to: "/admin/events", icon: Calendar, permission: "events:read" },
+  { label: "Calendar", to: "/admin/calendar", icon: Calendar, permission: "events:read" },
+  { label: "Vendors", to: "/admin/vendors", icon: Store, permission: "vendors:read" },
+  { label: "Finance", to: "/admin/finance", icon: IndianRupee, permission: "finance:read" },
+  { label: "Payments", to: "/admin/payments", icon: CreditCard, permission: "payments:read" },
+  { label: "Expenses", to: "/admin/expenses", icon: Receipt, permission: "expenses:read" },
+  { label: "Investments", to: "/admin/investments", icon: PiggyBank, permission: "partners:read" },
+  { label: "Reports", to: "/admin/reports", icon: BarChart3, permission: "finance:read" },
   { label: "Settings", to: "/admin/settings", icon: Settings, permission: "settings:read" },
   { label: "Users", to: "/admin/users", icon: Users, permission: "users:manage" },
   { label: "Audit Logs", to: "/admin/audit", icon: ScrollText, permission: "audit:read" },

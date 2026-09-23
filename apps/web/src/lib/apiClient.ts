@@ -43,6 +43,14 @@ export class ApiClientError extends Error {
   }
 }
 
+/**
+ * The double-submit CSRF token, for callers that cannot use `apiClient` —
+ * namely the raw-body upload, which is not JSON.
+ */
+export function csrfToken(): string {
+  return readCookie(CSRF_COOKIE) ?? "";
+}
+
 function readCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;
   return document.cookie

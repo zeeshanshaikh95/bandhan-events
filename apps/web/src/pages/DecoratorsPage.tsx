@@ -108,6 +108,38 @@ export default function DecoratorsPage() {
         </div>
       </section>
 
+      {/* Build your own stage — interactive entry */}
+      <section aria-label="Build your own stage" className="bg-ivory-soft bg-grain">
+        <div className="container-site grid items-center gap-8 py-16 sm:py-20 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <p className="eyebrow">Interactive</p>
+            <h2 className="mt-3 font-serif text-4xl leading-[1.08] font-medium tracking-tight text-forest sm:text-5xl">
+              Build Your Own Stage
+            </h2>
+            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-charcoal-muted">
+              Choose the layout, backdrop, flowers, lighting, seating and décor — see it come
+              together in a live preview, then send the whole configuration to our decorators for
+              a quotation.
+            </p>
+            <Reveal delay={0.1} className="mt-8">
+              <Link to="/build-your-stage" className="btn btn-solid">
+                Start Building
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            </Reveal>
+          </div>
+          <Reveal delay={0.15}>
+            <Link to="/build-your-stage" aria-label="Open the stage builder">
+              <SmartImage
+                image={images.decorStage}
+                className="aspect-[4/3] w-full"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Real work gallery carousel */}
       <section aria-label="Recent decoration work" className="container-site py-20 sm:py-28">
         <div className="flex flex-wrap items-end justify-between gap-8">

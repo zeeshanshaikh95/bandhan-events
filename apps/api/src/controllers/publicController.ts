@@ -50,6 +50,7 @@ export const publicController = {
         budget: input.budget,
         message: input.message,
         pagePath: input.pagePath,
+        stageConfiguration: input.stageConfiguration,
       },
       { ip: clientIp(req), requestId: requestId(req) }
     );

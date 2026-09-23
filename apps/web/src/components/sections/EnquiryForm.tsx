@@ -8,6 +8,7 @@ import {
   SERVICES,
   enquirySchema,
   type EnquiryInput,
+  type StageConfiguration,
 } from "@bandhan/shared";
 import { publicApi } from "@/services/api";
 import { ApiClientError } from "@/lib/apiClient";
@@ -54,10 +55,25 @@ const labelClasses = "block font-sans text-[11px] font-semibold uppercase tracki
  * stored as a Lead and attributed with source = "website". Validation here
  * uses the shared Zod schema, so the browser and the server agree on the rules
  * — the client copy exists for fast feedback, not as the security boundary.
+ *
+ * The stage builder passes its `stageConfiguration` (and pre-selects a
+ * service) so the same form doubles as its quotation request without
+ * duplicating any field logic.
  */
-export default function EnquiryForm({ className }: { className?: string }) {
+export default function EnquiryForm({
+  className,
+  stageConfiguration,
+  defaultService,
+}: {
+  className?: string;
+  stageConfiguration?: StageConfiguration;
+  defaultService?: string;
+}) {
   const location = useLocation();
-  const [form, setForm] = useState<FormState>(initialForm);
+  const [form, setForm] = useState<FormState>(() => ({
+    ...initialForm,
+    service: defaultService ?? "",
+  }));
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -114,6 +130,7 @@ export default function EnquiryForm({ className }: { className?: string }) {
       message: form.message || undefined,
       company: form.company || undefined,
       pagePath: location.pathname,
+      stageConfiguration,
     });
 
     if (!parsed.success) {
@@ -140,8 +157,11 @@ export default function EnquiryForm({ className }: { className?: string }) {
         <h3 className="mt-5 font-serif text-3xl font-medium text-forest">Thank You</h3>
         <p className="mt-3 max-w-sm text-sm leading-relaxed text-charcoal-muted">
           Your enquiry has reached our team and is saved with our records
-          {reference ? ` under reference ${reference.slice(-6).toUpperCase()}` : ""}. We will reach
-          out to you shortly. For an immediate response, WhatsApp us anytime.
+          {reference ? ` under reference ${reference.slice(-6).toUpperCase()}` : ""}. 
+          {stageConfiguration
+            ? "Your stage configuration is attached — our decorators will respond with ideas and pricing."
+            : "We will reach out to you shortly."}{' '}
+          For an immediate response, WhatsApp us anytime.
         </p>
       </div>
     );

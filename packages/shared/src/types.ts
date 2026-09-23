@@ -1,6 +1,7 @@
 import type { LeadSource, LeadStatus, UserStatus } from "./constants";
 import type { Permission } from "./permissions";
 import type { Role } from "./roles";
+import type { StageConfiguration } from "./validation/stage";
 
 /** Every API response uses one of these two envelopes. */
 export interface ApiSuccess<T> {
@@ -74,6 +75,8 @@ export interface LeadDto {
   nextFollowUpAt?: string | null;
   lostReason?: string | null;
   pagePath?: string | null;
+  /** Stage-builder choices, present only on enquiries from /build-your-stage. */
+  stageConfiguration?: StageConfiguration | null;
   createdAt: string;
   updatedAt: string;
 }

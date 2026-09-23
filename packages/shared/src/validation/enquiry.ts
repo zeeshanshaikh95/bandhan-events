@@ -8,6 +8,7 @@ import {
   phoneSchema,
   trimmedString,
 } from "./primitives";
+import { stageConfigurationSchema } from "./stage";
 
 /**
  * Public enquiry payload — the exact contract of the website contact form.
@@ -36,6 +37,11 @@ export const enquirySchema = z.object({
   company: z.string().max(200).optional(),
   /** Optional page the enquiry came from, for attribution. */
   pagePath: trimmedString(200).optional(),
+  /**
+   * Optional stage-builder choices — sent only by /build-your-stage so the
+   * dashboard can show exactly what the visitor configured.
+   */
+  stageConfiguration: stageConfigurationSchema.optional(),
 });
 
 export type EnquiryInput = z.infer<typeof enquirySchema>;

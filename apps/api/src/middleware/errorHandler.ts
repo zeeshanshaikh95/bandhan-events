@@ -64,6 +64,18 @@ export const errorHandler: ErrorRequestHandler = (
     return;
   }
 
+  /**
+   * A malformed id (`/quotations/not-an-id`) is a bad request, not a crash.
+   * Handled here so every module answers 400 instead of leaking a 500.
+   */
+  if (error instanceof MongooseError.CastError) {
+    res.status(400).json({
+      success: false,
+      error: { code: "INVALID_ID", message: "That identifier is not valid." },
+    });
+    return;
+  }
+
   if (error instanceof MongooseError.ValidationError) {
     const details: Record<string, string[]> = {};
     for (const [field, issue] of Object.entries(error.errors)) {

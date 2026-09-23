@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-clear.png";
 import { cn } from "@/utils/cn";
 
 interface LogoProps {
@@ -8,8 +8,10 @@ interface LogoProps {
 }
 
 /**
- * Approved Bandhan Events logo. Aspect ratio preserved; on dark or
- * transparent-over-photo backgrounds an ivory-tinted filter keeps it legible.
+ * Approved Bandhan Events logo (background keyed out — see
+ * scripts/make-logo-transparent.mjs). Aspect ratio preserved; on dark or
+ * transparent-over-photo backgrounds an ivory-tinted filter keeps it legible
+ * without turning the old opaque cream square into a white box.
  */
 export default function Logo({ variant = "dark", className }: LogoProps) {
   return (

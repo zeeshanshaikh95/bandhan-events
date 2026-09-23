@@ -11,6 +11,10 @@ export default defineConfig(({ mode }) => {
   const apiProxyTarget = env.VITE_API_PROXY_TARGET || "http://127.0.0.1:4000";
 
   return {
+    // GitHub Pages serves a project site under /<repo>/ — pass VITE_BASE at
+    // build time to rebase every asset and route onto it. Local dev and
+    // same-origin production hosts keep the default "/".
+    base: process.env.VITE_BASE || env.VITE_BASE || "/",
     plugins: [react()],
     resolve: {
       alias: {

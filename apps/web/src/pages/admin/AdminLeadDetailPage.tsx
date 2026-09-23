@@ -6,6 +6,7 @@ import {
   LEAD_STATUSES,
   LEAD_STATUS_LABELS,
   leadNoteSchema,
+  stageChoiceLines,
   type LeadStatus,
 } from "@bandhan/shared";
 import {
@@ -186,6 +187,24 @@ export default function AdminLeadDetailPage() {
                 )}
               </dl>
             </Panel>
+
+            {/* Stage builder choices — present only on /build-your-stage enquiries */}
+            {lead.stageConfiguration && (
+              <Panel
+                title="Stage configuration"
+                description="Chosen in the Build Your Own Stage tool on the website."
+                className="lg:col-span-3"
+              >
+                <dl className="grid gap-x-8 gap-y-4 p-5 sm:grid-cols-2 sm:p-6">
+                  {stageChoiceLines(lead.stageConfiguration).map((line) => (
+                    <div key={line.label}>
+                      <dt className={adminLabelClass}>{line.label}</dt>
+                      <dd className="mt-1.5 text-sm text-charcoal">{line.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Panel>
+            )}
 
             {/* Pipeline controls */}
             <Panel title="Pipeline">

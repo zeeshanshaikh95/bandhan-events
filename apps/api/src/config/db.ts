@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+// Side-effect import: registers every schema so `populate()` resolves `ref:`
+// regardless of which repository loads first. See models/index.ts.
+import "@/models";
 import { env, isProduction, isTest } from "@/config/env";
 import { logger } from "@/utils/logger";
 

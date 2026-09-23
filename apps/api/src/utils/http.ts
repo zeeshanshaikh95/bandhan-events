@@ -11,12 +11,14 @@ export function asyncHandler<T extends RequestHandler>(handler: T): RequestHandl
   };
 }
 
-/** Best-effort client IP, honouring the configured proxy trust. */
+/**
+ * Client IP for audit records. Express is the single source of truth: with
+ * `trust proxy` disabled (the default) `req.ip` is the socket address and any
+ * X-Forwarded-For header an attacker sends is ignored; when TRUST_PROXY is
+ * enabled Express picks the correct hop from the chain. Reading the header
+ * directly here would let any client forge the IP written to the audit log.
+ */
 export function clientIp(req: Request): string {
-  const forwarded = req.headers["x-forwarded-for"];
-  if (typeof forwarded === "string" && forwarded.length > 0) {
-    return forwarded.split(",")[0]!.trim();
-  }
   return req.ip ?? "unknown";
 }
 

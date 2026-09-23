@@ -1,8 +1,15 @@
 import { Types } from "mongoose";
-import type { DashboardStats, LeadDto, LeadListQuery, Paginated } from "@bandhan/shared";
+import type {
+  DashboardStats,
+  LeadDto,
+  LeadListQuery,
+  Paginated,
+  StageConfiguration,
+} from "@bandhan/shared";
 import type { LeadDocument } from "@/models/Lead";
 import { leadRepository } from "@/repositories/leadRepository";
 import { AUDIT_ACTIONS, auditService } from "@/services/auditService";
+import { syncService } from "@/services/syncService";
 import type { AuthContext } from "@/types/auth";
 import { ApiError } from "@/utils/ApiError";
 import { buildPaginated } from "@/utils/http";
@@ -40,6 +47,7 @@ export function toLeadDto(lead: LeadDocument): LeadDto {
     nextFollowUpAt: lead.nextFollowUpAt ? lead.nextFollowUpAt.toISOString() : null,
     lostReason: lead.lostReason ?? null,
     pagePath: lead.pagePath ?? null,
+    stageConfiguration: (lead.stageConfiguration as StageConfiguration | null) ?? null,
     createdAt: (lead.createdAt as Date).toISOString(),
     updatedAt: (lead.updatedAt as Date).toISOString(),
   };
@@ -62,6 +70,7 @@ export const leadService = {
       budget?: string;
       message?: string;
       pagePath?: string;
+      stageConfiguration?: StageConfiguration;
     },
     context: { ip: string; requestId: string }
   ): Promise<LeadDto> {
@@ -76,6 +85,7 @@ export const leadService = {
       budget: input.budget,
       message: input.message,
       pagePath: input.pagePath,
+      stageConfiguration: input.stageConfiguration,
       source: "website",
       status: "NEW",
     });
@@ -86,8 +96,15 @@ export const leadService = {
       entityId: String(lead._id),
       ip: context.ip,
       requestId: context.requestId,
-      metadata: { eventType: input.eventType, serviceRequired: input.serviceRequired },
+      metadata: {
+        eventType: input.eventType,
+        serviceRequired: input.serviceRequired,
+        ...(input.stageConfiguration ? { stageBuilder: true } : {}),
+      },
     });
+
+    // Sync to Google Sheets (non-blocking — failures logged but don't block the response)
+    syncService.syncLead(lead).catch(() => {});
 
     return toLeadDto(lead);
   },
@@ -107,6 +124,10 @@ export const leadService = {
       requestId: context.requestId,
       metadata: { source: input.source },
     });
+
+    // Sync to Google Sheets (non-blocking — failures logged but don't block the response)
+    syncService.syncLead(lead).catch(() => {});
+
     return toLeadDto(lead);
   },
 
@@ -147,6 +168,9 @@ export const leadService = {
       // Field names only — never the values, which may be customer data.
       metadata: { fields: Object.keys(patch) },
     });
+
+    // Sync to Google Sheets (non-blocking)
+    syncService.syncLead(lead).catch(() => {});
 
     return toLeadDto(lead);
   },

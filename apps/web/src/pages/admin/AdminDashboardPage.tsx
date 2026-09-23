@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, CheckCircle2, ExternalLink, Plug, XCircle } from "lucide-react";
 import { LEAD_SOURCES, LEAD_STATUS_LABELS, LEAD_STATUSES, type LeadStatus } from "@bandhan/shared";
-import { dashboardApi } from "@/services/api";
+import { dashboardApi, eventApi } from "@/services/api";
 import { useAuth } from "@/providers/AuthProvider";
 import {
   AdminSeo,
@@ -24,6 +24,12 @@ export default function AdminDashboardPage() {
   const stats = useQuery({
     queryKey: ["dashboard", "stats"],
     queryFn: () => dashboardApi.stats(),
+  });
+
+  const upcomingEvents = useQuery({
+    queryKey: ["dashboard", "upcoming-events"],
+    queryFn: () => eventApi.upcoming(30),
+    enabled: can("events:read"),
   });
 
   const integrations = useQuery({
@@ -219,6 +225,80 @@ export default function AdminDashboardPage() {
           </div>
         )}
       </Panel>
+
+      {/* Upcoming Events */}
+      {can("events:read") && (
+        <Panel
+          className="mt-6"
+          title="Upcoming Events"
+          description="Events in the next 30 days."
+          actions={
+            <Link
+              to="/admin/events"
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest2 text-forest transition hover:text-gold-deep"
+            >
+              All events <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          }
+        >
+          {upcomingEvents.isLoading ? (
+            <LoadingRows rows={3} columns={5} />
+          ) : !upcomingEvents.data || upcomingEvents.data.length === 0 ? (
+            <EmptyState
+              title="No upcoming events"
+              description="Events will appear here once bookings are confirmed."
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[42rem] border-collapse text-sm">
+                <caption className="sr-only">Upcoming events</caption>
+                <thead>
+                  <tr className="border-b border-forest/10 text-left">
+                    {["Date", "Event", "Customer", "Venue", "Status", "Outstanding"].map((heading) => (
+                      <th
+                        key={heading}
+                        scope="col"
+                        className="px-5 py-3 font-sans text-[10px] font-semibold uppercase tracking-widest2 text-charcoal-muted"
+                      >
+                        {heading}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {upcomingEvents.data.map((e) => (
+                    <tr key={e.id} className="border-b border-forest/5 last:border-0">
+                      <td className="px-5 py-3 text-charcoal-muted">
+                        {formatDate(e.eventDate)}
+                      </td>
+                      <td className="px-5 py-3">
+                        <Link to={`/admin/events/${e.id}`} className="link-underline text-forest">
+                          {e.eventName}
+                        </Link>
+                      </td>
+                      <td className="px-5 py-3 text-charcoal-muted">
+                        {e.customerName}
+                        <span className="block text-[11px]">{e.customerPhone}</span>
+                      </td>
+                      <td className="px-5 py-3 text-charcoal-muted">{e.venue || "—"}</td>
+                      <td className="px-5 py-3">
+                        <StatusPill status={e.status as any} />
+                      </td>
+                      <td className="px-5 py-3">
+                        {e.outstanding > 0 ? (
+                          <span className="text-red-600 font-medium">₹{e.outstanding.toLocaleString("en-IN")}</span>
+                        ) : (
+                          <span className="text-green-600">Paid</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Panel>
+      )}
 
       {/* Integrations — honest connection status, never a fake "connected" */}
       {can("settings:read") && (

@@ -93,6 +93,11 @@ const envSchema = z.preprocess(
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
 
+  // Google Sheets integration
+  GOOGLE_SHEETS_SPREADSHEET_ID: z.string().optional(),
+  GOOGLE_SHEETS_CLIENT_EMAIL: z.string().optional(),
+  GOOGLE_SHEETS_PRIVATE_KEY: z.string().optional(),
+
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   })
 );
@@ -121,6 +126,14 @@ function loadEnv(): Env {
   }
   if (isProduction && base.USE_IN_MEMORY_DB) {
     throw new Error("USE_IN_MEMORY_DB cannot be enabled in production.");
+  }
+  // Browsers reject SameSite=None cookies that are not Secure, so the combo
+  // would silently break sign-in in production — fail fast at startup instead.
+  const cookieSecure = base.COOKIE_SECURE ?? isProduction;
+  if (isProduction && base.COOKIE_SAMESITE === "none" && !cookieSecure) {
+    throw new Error(
+      'COOKIE_SAMESITE="none" requires COOKIE_SECURE=true in production (browsers reject SameSite=None without Secure).'
+    );
   }
 
   return {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Loader2, Save } from "lucide-react";
+import { Check, Loader2, RefreshCw, Save, TestTube } from "lucide-react";
 import { businessSettingsSchema, type BusinessSettingsInput } from "@bandhan/shared";
 import {
   AdminSeo,
@@ -16,9 +16,144 @@ import {
 } from "@/components/admin/AdminUI";
 import { ApiClientError } from "@/lib/apiClient";
 import { zodFormResolver } from "@/lib/formResolver";
-import { settingsApi } from "@/services/api";
+import { settingsApi, syncApi } from "@/services/api";
 import { useAuth } from "@/providers/AuthProvider";
 import { cn } from "@/utils/cn";
+
+function GoogleSheetsIntegrationPanel() {
+  const queryClient = useQueryClient();
+  const [testResult, setTestResult] = useState<{ connected: boolean; message: string } | null>(null);
+  const [isTesting, setIsTesting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const syncStatus = useQuery({
+    queryKey: ["sync", "status"],
+    queryFn: () => syncApi.status(),
+  });
+
+  const testConnection = async () => {
+    setIsTesting(true);
+    try {
+      const result = await syncApi.test();
+      setTestResult(result);
+    } catch (error) {
+      setTestResult({
+        connected: false,
+        message: error instanceof ApiClientError ? error.message : "Test failed",
+      });
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
+  const syncNow = async () => {
+    setIsSyncing(true);
+    try {
+      await syncApi.syncNow();
+      queryClient.invalidateQueries({ queryKey: ["sync"] });
+    } catch (error) {
+      // Error handled by UI
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  if (syncStatus.isLoading) {
+    return <LoadingRows rows={2} columns={2} />;
+  }
+
+  const status = syncStatus.data;
+  const configured = status?.configured ?? false;
+
+  return (
+    <div className="p-5 sm:p-6">
+      <div className="mb-4">
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+            configured
+              ? "bg-green-100 text-green-800"
+              : "bg-yellow-100 text-yellow-800"
+          )}>
+            {configured ? "Configured" : "Not Configured"}
+          </span>
+          {status?.spreadsheetId && (
+            <span className="text-xs text-charcoal-muted">
+              Spreadsheet: {status.spreadsheetId.substring(0, 20)}…
+            </span>
+          )}
+        </div>
+      </div>
+
+      {!configured && (
+        <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-800">
+          Google Sheets is not configured. Set the following environment variables on your server:
+          <ul className="mt-2 list-inside list-disc space-y-1">
+            <li><code className="rounded bg-yellow-100 px-1">GOOGLE_SHEETS_SPREADSHEET_ID</code></li>
+            <li><code className="rounded bg-yellow-100 px-1">GOOGLE_SHEETS_CLIENT_EMAIL</code></li>
+            <li><code className="rounded bg-yellow-100 px-1">GOOGLE_SHEETS_PRIVATE_KEY</code></li>
+          </ul>
+          <p className="mt-2">
+            Then share the spreadsheet with the service account email and restart the API.
+          </p>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-3">
+        <button
+          type="button"
+          onClick={testConnection}
+          disabled={isTesting}
+          className="inline-flex items-center gap-2 rounded border border-forest/20 bg-white px-3 py-2 text-sm text-forest hover:bg-forest/5 disabled:opacity-50"
+        >
+          {isTesting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <TestTube className="h-4 w-4" />
+          )}
+          Test Connection
+        </button>
+
+        <button
+          type="button"
+          onClick={syncNow}
+          disabled={isSyncing || !configured}
+          className="inline-flex items-center gap-2 rounded border border-forest/20 bg-white px-3 py-2 text-sm text-forest hover:bg-forest/5 disabled:opacity-50"
+        >
+          {isSyncing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
+          Sync Now
+        </button>
+      </div>
+
+      {testResult && (
+        <div className={cn(
+          "mt-4 rounded border p-3 text-sm",
+          testResult.connected
+            ? "border-green-200 bg-green-50 text-green-800"
+            : "border-red-200 bg-red-50 text-red-800"
+        )}>
+          {testResult.message}
+        </div>
+      )}
+
+      {status?.lastSyncAt && (
+        <p className="mt-4 text-xs text-charcoal-muted">
+          Last successful sync: {new Date(status.lastSyncAt).toLocaleString()}
+        </p>
+      )}
+
+      {status?.lastSyncError && (
+        <p className="mt-1 text-xs text-red-600">
+          Last sync error: {status.lastSyncError}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function AdminSettingsPage() {
   const { can } = useAuth();
@@ -260,6 +395,13 @@ export default function AdminSettingsPage() {
               {...register("address.country")}
             />
           </div>
+        </Panel>
+
+        <Panel
+          title="Google Sheets Integration"
+          description="Connect to Google Sheets for business reporting and data synchronization. The spreadsheet ID is configured via environment variables."
+        >
+          <GoogleSheetsIntegrationPanel />
         </Panel>
 
         <Panel

@@ -1,6 +1,7 @@
 import type { IntegrationStatus } from "@bandhan/shared";
 import { env } from "@/config/env";
 import { emailProvider } from "@/integrations/email";
+import { isGoogleSheetsConfigured } from "@/integrations/googleSheets";
 import { settingService } from "@/services/settingService";
 import { ApiError } from "@/utils/ApiError";
 
@@ -148,6 +149,14 @@ export async function integrationStatuses(): Promise<IntegrationStatus[]> {
       profileUrl: justdialUrl || null,
       trackedManually: true,
       manualStatus: justdialUrl ? ("LINKED" as const) : ("NOT_LINKED" as const),
+    },
+    {
+      key: "google-sheets",
+      label: "Google Sheets",
+      connected: isGoogleSheetsConfigured(),
+      note: isGoogleSheetsConfigured()
+        ? "Google Sheets API is configured. Leads are synced automatically."
+        : "Google Sheets not configured. Set GOOGLE_SHEETS_* environment variables to enable.",
     },
     {
       key: "storage",

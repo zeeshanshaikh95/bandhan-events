@@ -1,5 +1,5 @@
 import type { FilterQuery, Types } from "mongoose";
-import type { LeadListQuery } from "@bandhan/shared";
+import type { LeadListQuery, StageConfiguration } from "@bandhan/shared";
 import { Lead, type LeadDocument } from "@/models/Lead";
 
 interface CreateLeadInput {
@@ -17,6 +17,7 @@ interface CreateLeadInput {
   assignedTo?: string;
   nextFollowUpAt?: Date;
   pagePath?: string;
+  stageConfiguration?: StageConfiguration;
 }
 
 export const leadRepository = {
@@ -25,6 +26,9 @@ export const leadRepository = {
     if (!input.email) document.email = null;
     if (!input.eventDate) document.eventDate = null;
     if (input.assignedTo) document.assignedTo = input.assignedTo;
+    // Mongoose would otherwise drop the key entirely when absent — the DTO
+    // expects an explicit null so `stageConfiguration` never flips shape.
+    if (!input.stageConfiguration) document.stageConfiguration = null;
     return Lead.create(document);
   },
 

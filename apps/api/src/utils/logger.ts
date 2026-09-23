@@ -5,31 +5,28 @@ type Level = "debug" | "info" | "warn" | "error";
 const LEVEL_WEIGHT: Record<Level, number> = { debug: 10, info: 20, warn: 30, error: 40 };
 
 /**
- * Keys whose values must never reach the log sink. Kept deliberately broad —
- * a leaked reset token in a log file is a full account takeover.
+ * Key patterns whose values must never reach the log sink. Matched as
+ * substrings, case-insensitively, so composite names the exact-match list
+ * would miss — `smtp_password`, `meta_app_secret`, `cloudinary_api_secret`,
+ * `google_sheets_private_key` — are all covered. A leaked credential in a log
+ * file is a full compromise of whatever it opens.
  */
-const REDACTED_KEYS = [
-  "password",
-  "passwordhash",
-  "currentpassword",
-  "newpassword",
-  "temporarypassword",
-  "confirmpassword",
-  "token",
-  "tokenhash",
-  "resettoken",
-  "resettokenhash",
-  "csrftoken",
-  "csrftokenhash",
-  "authorization",
-  "cookie",
-  "set-cookie",
-  "sessionsecret",
-  "secret",
-  "apikey",
-  "access_token",
-  "mongodb_uri",
+const REDACT_PATTERNS: RegExp[] = [
+  /password/i,
+  /token/i,
+  /secret/i,
+  /passphrase/i,
+  /private_?key/i,
+  /api[_-]?key/i,
+  /authorization/i,
+  /cookie/i,
+  /credential/i,
+  /mongodb_uri/i,
 ];
+
+function isSensitiveKey(key: string): boolean {
+  return REDACT_PATTERNS.some((pattern) => pattern.test(key));
+}
 
 function redact(value: unknown, depth = 0): unknown {
   if (depth > 4) return "[truncated]";
@@ -38,7 +35,7 @@ function redact(value: unknown, depth = 0): unknown {
 
   const output: Record<string, unknown> = {};
   for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-    output[key] = REDACTED_KEYS.includes(key.toLowerCase()) ? "[redacted]" : redact(item, depth + 1);
+    output[key] = isSensitiveKey(key) ? "[redacted]" : redact(item, depth + 1);
   }
   return output;
 }

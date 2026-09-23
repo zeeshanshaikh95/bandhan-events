@@ -5,6 +5,12 @@ import {
   LEAD_SOURCES,
   LEAD_STATUSES,
   SERVICE_VALUES,
+  STAGE_BACKDROP_VALUES,
+  STAGE_EXTRA_DECOR_VALUES,
+  STAGE_FLOWER_VALUES,
+  STAGE_FURNITURE_VALUES,
+  STAGE_LAYOUT_VALUES,
+  STAGE_LIGHTING_VALUES,
 } from "@bandhan/shared";
 
 /**
@@ -22,6 +28,33 @@ const leadNoteSchema = new Schema(
     authorName: { type: String, required: true, trim: true, maxlength: 80 },
   },
   { timestamps: { createdAt: true, updatedAt: false }, _id: true }
+);
+
+/**
+ * Choices from the "Build Your Own Stage" wizard. Present only on enquiries
+ * that came through /build-your-stage; enum-guarded here exactly like the
+ * shared Zod schema so a stale or hand-crafted payload cannot store values
+ * the dashboard would then render as raw slugs.
+ */
+const stageConfigurationSchema = new Schema(
+  {
+    layout: { type: String, enum: STAGE_LAYOUT_VALUES, required: true },
+    backdrop: { type: String, enum: STAGE_BACKDROP_VALUES, required: true },
+    flowers: { type: String, enum: STAGE_FLOWER_VALUES, required: true },
+    lighting: { type: String, enum: STAGE_LIGHTING_VALUES, required: true },
+    furniture: { type: String, enum: STAGE_FURNITURE_VALUES, required: true },
+    otherDecor: {
+      type: [String],
+      enum: STAGE_EXTRA_DECOR_VALUES,
+      required: true,
+      validate: {
+        validator: (values: string[]) => values.length >= 1,
+        message: "Please choose at least one décor option.",
+      },
+    },
+    notes: { type: String, trim: true, maxlength: 500, default: "" },
+  },
+  { _id: false }
 );
 
 const leadSchema = new Schema(
@@ -48,6 +81,9 @@ const leadSchema = new Schema(
 
     /** Attribution for website enquiries (which page they converted on). */
     pagePath: { type: String, trim: true, maxlength: 200, default: null },
+
+    /** Stage-builder choices — null for every other kind of lead. */
+    stageConfiguration: { type: stageConfigurationSchema, default: null },
 
     /** Set when the lead is converted into a customer record (later module). */
     convertedCustomerId: { type: Schema.Types.ObjectId, ref: "Customer", default: null },

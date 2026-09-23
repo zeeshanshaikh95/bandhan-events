@@ -31,6 +31,41 @@ export const AUDIT_ACTIONS = {
   userUpdated: "USER_UPDATED",
   userPasswordReset: "USER_PASSWORD_RESET",
   settingsUpdated: "SETTINGS_UPDATED",
+
+  customerCreated: "CUSTOMER_CREATED",
+  customerUpdated: "CUSTOMER_UPDATED",
+
+  quotationCreated: "QUOTATION_CREATED",
+  quotationUpdated: "QUOTATION_UPDATED",
+  quotationVersionCreated: "QUOTATION_VERSION_CREATED",
+  quotationSent: "QUOTATION_SENT",
+  quotationAccepted: "QUOTATION_ACCEPTED",
+  quotationRejected: "QUOTATION_REJECTED",
+  quotationCancelled: "QUOTATION_CANCELLED",
+  quotationConverted: "QUOTATION_CONVERTED_TO_EVENT",
+  quotationPdfGenerated: "QUOTATION_PDF_GENERATED",
+
+  invoiceCreated: "INVOICE_CREATED",
+  invoiceUpdated: "INVOICE_UPDATED",
+  invoiceIssued: "INVOICE_ISSUED",
+  invoiceVoided: "INVOICE_VOIDED",
+  invoicePdfGenerated: "INVOICE_PDF_GENERATED",
+  receiptGenerated: "PAYMENT_RECEIPT_GENERATED",
+
+  documentShared: "DOCUMENT_SHARED",
+
+  // Vendors and caterers
+  vendorCreated: "VENDOR_CREATED",
+  vendorUpdated: "VENDOR_UPDATED",
+  vendorStatusChanged: "VENDOR_STATUS_CHANGED",
+  vendorArchived: "VENDOR_ARCHIVED",
+  vendorNoteAdded: "VENDOR_NOTE_ADDED",
+  vendorDocumentAdded: "VENDOR_DOCUMENT_ADDED",
+  vendorAssigned: "VENDOR_ASSIGNED_TO_EVENT",
+  vendorAssignmentUpdated: "VENDOR_ASSIGNMENT_UPDATED",
+  vendorAssignmentRemoved: "VENDOR_REMOVED_FROM_EVENT",
+  vendorCostChanged: "VENDOR_COST_UPDATED",
+  vendorPaymentRecorded: "VENDOR_PAYMENT_RECORDED",
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

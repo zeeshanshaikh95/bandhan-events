@@ -11,6 +11,7 @@ const BanquetCateringPage = lazy(() => import("@/pages/BanquetCateringPage"));
 const GalleryPage = lazy(() => import("@/pages/GalleryPage"));
 const GiftingPage = lazy(() => import("@/pages/GiftingPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
+const StageBuilderPage = lazy(() => import("@/pages/StageBuilderPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const AdminApp = lazy(() => import("@/routes/AdminApp"));
 
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/decorators" element={<DecoratorsPage />} />
+        <Route path="/build-your-stage" element={<StageBuilderPage />} />
         <Route path="/banquet-catering" element={<BanquetCateringPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/gifting" element={<GiftingPage />} />
