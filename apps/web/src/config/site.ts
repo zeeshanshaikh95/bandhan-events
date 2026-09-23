@@ -33,8 +33,8 @@ export const siteConfig = {
   contact: {
     // TODO: Replace with the real phone number when the owners confirm it.
     phoneDisplay: env.VITE_CONTACT_PHONE_DISPLAY ?? "Coming Soon",
-    // TODO: Replace with the real WhatsApp business number (digits only, with country code).
-    whatsappNumber: env.VITE_WHATSAPP_NUMBER ?? "910000000000",
+    // WhatsApp business number (digits only, with country code).
+    whatsappNumber: env.VITE_WHATSAPP_NUMBER ?? "919820080526",
     // TODO: Replace with the real email address when confirmed.
     email: env.VITE_CONTACT_EMAIL ?? "Coming Soon",
     // TODO: Replace with the real Instagram profile URL when confirmed.
