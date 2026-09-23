@@ -33,13 +33,11 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install dependencies
-        # `npm install` rather than `npm ci`: the lockfile was generated on
-        # Windows, where npm does not record other platforms' optional native
-        # binaries (rollup/esbuild linux-x64) — `npm ci` on Linux then fails
-        # with "Cannot find module @rollup/rollup-linux-x64-gnu" (npm/cli#4828).
-        # npm install still honours every locked version and only adds the
-        # platform-specific optional packages the current OS needs.
-        run: npm install --no-audit --no-fund
+        # npm ci against the lockfile. The Windows-generated lock was missing
+        # @rollup/rollup-linux-x64-gnu (npm does not record other platforms'
+        # optional native binaries — npm/cli#4828); the entry was added with
+        # its registry integrity so cross-platform installs work.
+        run: npm ci
       - name: Build site
         run: npm run build
         env:
