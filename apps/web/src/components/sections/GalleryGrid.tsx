@@ -8,6 +8,7 @@ import {
 } from "@/data/galleryData";
 import SmartImage from "@/components/ui/SmartImage";
 import { imageSrcSet } from "@/utils/imageSrcSet";
+import { publicPath } from "@/utils/publicPath";
 import { cn } from "@/utils/cn";
 
 interface GalleryGridProps {
@@ -197,7 +198,7 @@ export default function GalleryGrid({ limit, showFilter = true }: GalleryGridPro
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={items[lightbox].src}
+                src={publicPath(items[lightbox].src)}
                 srcSet={imageSrcSet(items[lightbox])}
                 sizes="(min-width: 1280px) 1024px, 100vw"
                 alt={items[lightbox].alt}

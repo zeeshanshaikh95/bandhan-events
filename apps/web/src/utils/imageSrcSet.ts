@@ -1,5 +1,6 @@
 import type { SiteImage } from "@/data/images";
 import { imageManifest } from "@/data/imageManifest";
+import { publicPath } from "@/utils/publicPath";
 
 /**
  * ---------------------------------------------------------------------------
@@ -22,10 +23,13 @@ export function imageSrcSet(image: SiteImage): string | undefined {
   const entry = imageManifest[image.src];
   if (!entry) return undefined;
 
-  const candidates = entry.variants.map((variant) => ({ w: variant.w, src: variant.src }));
+  const candidates = entry.variants.map((variant) => ({
+    w: variant.w,
+    src: publicPath(variant.src),
+  }));
   const widest = candidates[candidates.length - 1];
   if (entry.width > 0 && (!widest || entry.width > widest.w)) {
-    candidates.push({ w: entry.width, src: image.src });
+    candidates.push({ w: entry.width, src: publicPath(image.src) });
   }
 
   if (candidates.length < 2) return undefined;

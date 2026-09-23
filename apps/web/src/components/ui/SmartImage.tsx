@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { imageFallback, type SiteImage } from "@/data/images";
 import { imageIntrinsicSize, imageSrcSet } from "@/utils/imageSrcSet";
+import { publicPath } from "@/utils/publicPath";
 import { cn } from "@/utils/cn";
 
 interface SmartImageProps {
@@ -28,8 +29,8 @@ export default function SmartImage({
   className,
   imgClassName,
 }: SmartImageProps) {
-  const [src, setSrc] = useState(image.src);
-  const broken = src !== image.src;
+  const [src, setSrc] = useState(() => publicPath(image.src));
+  const broken = src !== publicPath(image.src);
   const srcSet = broken ? undefined : imageSrcSet(image);
   const resolvedSizes = srcSet ? sizes ?? "100vw" : undefined;
   const { width, height } = imageIntrinsicSize(image);
@@ -51,7 +52,7 @@ export default function SmartImage({
          */
         {...(priority ? ({ fetchpriority: "high" } as Record<string, string>) : {})}
         onError={() => {
-          if (!broken) setSrc(imageFallback);
+          if (!broken) setSrc(publicPath(imageFallback));
         }}
         className={cn("h-full w-full object-cover", imgClassName)}
       />
