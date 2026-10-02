@@ -45,6 +45,160 @@ export const imageManifest: ImageManifest = {
       }
     ]
   },
+  "/images/banquet-carpet-aisle-seating.webp": {
+    "width": 1200,
+    "height": 675,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/banquet-carpet-aisle-seating-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/banquet-carpet-aisle-seating-800.webp"
+      }
+    ]
+  },
+  "/images/banquet-entrance-drape.webp": {
+    "width": 1200,
+    "height": 675,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/banquet-entrance-drape-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/banquet-entrance-drape-800.webp"
+      }
+    ]
+  },
+  "/images/banquet-golden-round-tables.webp": {
+    "width": 1092,
+    "height": 1440,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/banquet-golden-round-tables-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/banquet-golden-round-tables-800.webp"
+      }
+    ]
+  },
+  "/images/banquet-golden-theatre-seating.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/banquet-golden-theatre-seating-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/banquet-golden-theatre-seating-800.webp"
+      }
+    ]
+  },
+  "/images/banquet-luxury-buffet.webp": {
+    "width": 1092,
+    "height": 1440,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/banquet-luxury-buffet-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/banquet-luxury-buffet-800.webp"
+      }
+    ]
+  },
+  "/images/birthday-neon-glow-crazy.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/birthday-neon-glow-crazy-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/birthday-neon-glow-crazy-800.webp"
+      }
+    ]
+  },
+  "/images/birthday-neon-glow-stage.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/birthday-neon-glow-stage-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/birthday-neon-glow-stage-800.webp"
+      }
+    ]
+  },
+  "/images/birthday-pink-floral-stage.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/birthday-pink-floral-stage-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/birthday-pink-floral-stage-800.webp"
+      }
+    ]
+  },
+  "/images/birthday-pink-welcome-board.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/birthday-pink-welcome-board-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/birthday-pink-welcome-board-800.webp"
+      }
+    ]
+  },
+  "/images/birthday-rose-gold-stage.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/birthday-rose-gold-stage-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/birthday-rose-gold-stage-800.webp"
+      }
+    ]
+  },
+  "/images/birthday-rose-gold-welcome.webp": {
+    "width": 1086,
+    "height": 1448,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/birthday-rose-gold-welcome-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/birthday-rose-gold-welcome-800.webp"
+      }
+    ]
+  },
   "/images/candle-1.webp": {
     "width": 1600,
     "height": 1067,
@@ -96,6 +250,20 @@ export const imageManifest: ImageManifest = {
       {
         "w": 1200,
         "src": "/images/celebration-2-1200.webp"
+      }
+    ]
+  },
+  "/images/ceremony-white-chair-setup.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/ceremony-white-chair-setup-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/ceremony-white-chair-setup-800.webp"
       }
     ]
   },
@@ -189,6 +357,34 @@ export const imageManifest: ImageManifest = {
       }
     ]
   },
+  "/images/corporate-golden-gala-stage.webp": {
+    "width": 1092,
+    "height": 1440,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/corporate-golden-gala-stage-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/corporate-golden-gala-stage-800.webp"
+      }
+    ]
+  },
+  "/images/corporate-grand-draped-hall.webp": {
+    "width": 1092,
+    "height": 1440,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/corporate-grand-draped-hall-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/corporate-grand-draped-hall-800.webp"
+      }
+    ]
+  },
   "/images/couple-1.webp": {
     "width": 1600,
     "height": 1067,
@@ -279,6 +475,20 @@ export const imageManifest: ImageManifest = {
       }
     ]
   },
+  "/images/decor-blossom-stage-backdrop.webp": {
+    "width": 1200,
+    "height": 771,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/decor-blossom-stage-backdrop-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/decor-blossom-stage-backdrop-800.webp"
+      }
+    ]
+  },
   "/images/decor-bouquet.webp": {
     "width": 1600,
     "height": 2400,
@@ -315,6 +525,20 @@ export const imageManifest: ImageManifest = {
       }
     ]
   },
+  "/images/decor-floral-chandelier-backdrop.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/decor-floral-chandelier-backdrop-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/decor-floral-chandelier-backdrop-800.webp"
+      }
+    ]
+  },
   "/images/decor-floral.webp": {
     "width": 1600,
     "height": 1067,
@@ -348,6 +572,20 @@ export const imageManifest: ImageManifest = {
       {
         "w": 1200,
         "src": "/images/decor-outdoor-1200.webp"
+      }
+    ]
+  },
+  "/images/decor-pink-floral-tower.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/decor-pink-floral-tower-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/decor-pink-floral-tower-800.webp"
       }
     ]
   },
@@ -582,6 +820,34 @@ export const imageManifest: ImageManifest = {
       {
         "w": 1200,
         "src": "/images/light-1-1200.webp"
+      }
+    ]
+  },
+  "/images/wedding-floral-stage-loveseat.webp": {
+    "width": 1122,
+    "height": 1402,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/wedding-floral-stage-loveseat-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/wedding-floral-stage-loveseat-800.webp"
+      }
+    ]
+  },
+  "/images/wedding-pink-floral-stage.webp": {
+    "width": 1200,
+    "height": 800,
+    "variants": [
+      {
+        "w": 480,
+        "src": "/images/wedding-pink-floral-stage-480.webp"
+      },
+      {
+        "w": 800,
+        "src": "/images/wedding-pink-floral-stage-800.webp"
       }
     ]
   }

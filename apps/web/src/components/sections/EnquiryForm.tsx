@@ -1,20 +1,17 @@
-import { useState, type FormEvent } from "react";
-import { useLocation } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { useRef, useState, type FormEvent } from "react";
+import { MessageCircle } from "lucide-react";
 import {
   BUDGET_RANGES,
   EVENT_TYPES,
   SERVICES,
   enquirySchema,
-  type EnquiryInput,
   type StageConfiguration,
 } from "@bandhan/shared";
-import { publicApi } from "@/services/api";
-import { ApiClientError } from "@/lib/apiClient";
+import { useWhatsApp } from "@/providers/SettingsProvider";
+import { buildEnquiryMessage, sanitizeMessageText } from "@/utils/enquiryMessage";
 import { cn } from "@/utils/cn";
 
-type Status = "idle" | "submitted";
+type Status = "idle" | "opened";
 
 interface FormState {
   name: string;
@@ -51,14 +48,17 @@ const labelClasses = "block font-sans text-[11px] font-semibold uppercase tracki
 /**
  * Public enquiry form.
  *
- * Every valid submission is POSTed to the API, where it is validated again,
- * stored as a Lead and attributed with source = "website". Validation here
- * uses the shared Zod schema, so the browser and the server agree on the rules
- * — the client copy exists for fast feedback, not as the security boundary.
+ * Submission hands the enquiry to WhatsApp: the visitor's answers are validated
+ * here (with the shared Zod schema, so the rules match the rest of the platform),
+ * formatted into a message and opened in a pre-filled chat with the business
+ * number. Nothing is sent from the website — the visitor presses Send in
+ * WhatsApp, which is why the confirmation never claims the enquiry was
+ * delivered. The public site is served from GitHub Pages, so there is no
+ * application server to post to.
  *
- * The stage builder passes its `stageConfiguration` (and pre-selects a
- * service) so the same form doubles as its quotation request without
- * duplicating any field logic.
+ * The stage builder passes its `stageConfiguration` (and pre-selects a service)
+ * so the same form doubles as its quotation request without duplicating any
+ * field logic.
  */
 export default function EnquiryForm({
   className,
@@ -69,7 +69,7 @@ export default function EnquiryForm({
   stageConfiguration?: StageConfiguration;
   defaultService?: string;
 }) {
-  const location = useLocation();
+  const whatsapp = useWhatsApp();
   const [form, setForm] = useState<FormState>(() => ({
     ...initialForm,
     service: defaultService ?? "",
@@ -77,7 +77,9 @@ export default function EnquiryForm({
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
-  const [reference, setReference] = useState<string | null>(null);
+  const [handoffHref, setHandoffHref] = useState<string | null>(null);
+  /** Guards a double-click from firing two handoffs before React re-renders. */
+  const handoffStarted = useRef(false);
 
   const set = (key: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -86,36 +88,9 @@ export default function EnquiryForm({
     setErrors((err) => ({ ...err, [key]: undefined }));
   };
 
-  const mutation = useMutation({
-    mutationFn: (payload: EnquiryInput & { pagePath?: string }) => publicApi.submitEnquiry(payload),
-    onSuccess: (result) => {
-      setReference(result.reference ?? null);
-      setStatus("submitted");
-      setForm(initialForm);
-    },
-    onError: (error) => {
-      if (error instanceof ApiClientError && error.details) {
-        // Field-level messages come straight from the server's validator.
-        const fieldErrors: Partial<Record<keyof FormState, string>> = {};
-        for (const [field, messages] of Object.entries(error.details)) {
-          if (field in initialForm) {
-            fieldErrors[field as keyof FormState] = messages[0];
-          }
-        }
-        setErrors(fieldErrors);
-      }
-      setFormError(
-        error instanceof ApiClientError
-          ? error.status === 429
-            ? "Too many enquiries from this connection. Please wait a moment and try again."
-            : error.message
-          : "We could not send your enquiry. Please try again or WhatsApp us."
-      );
-    },
-  });
-
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (handoffStarted.current) return;
     setFormError(null);
 
     const parsed = enquirySchema.safeParse({
@@ -129,7 +104,6 @@ export default function EnquiryForm({
       budget: form.budget || undefined,
       message: form.message || undefined,
       company: form.company || undefined,
-      pagePath: location.pathname,
       stageConfiguration,
     });
 
@@ -137,7 +111,7 @@ export default function EnquiryForm({
       const next: Partial<Record<keyof FormState, string>> = {};
       for (const issue of parsed.error.issues) {
         const field = String(issue.path[0] ?? "");
-        // `serviceRequired` is the API's name for the form's "service" field.
+        // `serviceRequired` is the shared schema's name for the form's "service".
         const key = (field === "serviceRequired" ? "service" : field) as keyof FormState;
         if (key in initialForm && !next[key]) next[key] = issue.message;
       }
@@ -146,28 +120,64 @@ export default function EnquiryForm({
       return;
     }
 
+    // `parsed.data.message` has had its line breaks stripped by the shared
+    // schema (see sanitizeMessageText) — keep the visitor's paragraphs.
+    const answers = { ...parsed.data, message: sanitizeMessageText(form.message) || undefined };
+    const href = whatsapp(buildEnquiryMessage(answers));
+    if (!href) {
+      setFormError(
+        "WhatsApp is not available right now. Please use the WhatsApp button on this page instead."
+      );
+      return;
+    }
+
     setErrors({});
-    mutation.mutate(parsed.data);
+    handoffStarted.current = true;
+    setHandoffHref(href);
+    // Opens WhatsApp Web on a desktop and the WhatsApp app on a phone. The link
+    // is also kept on screen, so a blocked popup is still recoverable.
+    window.open(href, "_blank", "noopener,noreferrer");
+    setStatus("opened");
   };
 
-  if (status === "submitted") {
+  if (status === "opened") {
     return (
       <div className={cn("surface-card flex flex-col items-center px-8 py-16 text-center", className)} role="status">
-        <CheckCircle2 className="h-10 w-10 text-gold-deep" aria-hidden="true" />
-        <h3 className="mt-5 font-serif text-3xl font-medium text-forest">Thank You</h3>
-        <p className="mt-3 max-w-sm text-sm leading-relaxed text-charcoal-muted">
-          Your enquiry has reached our team and is saved with our records
-          {reference ? ` under reference ${reference.slice(-6).toUpperCase()}` : ""}. 
+        <MessageCircle className="h-10 w-10 text-gold-deep" aria-hidden="true" />
+        <h3 className="mt-5 font-serif text-3xl font-medium text-forest">Your Enquiry Is Ready in WhatsApp</h3>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-charcoal-muted">
+          WhatsApp should have opened in a new tab with your details already written out.
+          Nothing has been sent yet — press <strong className="font-semibold text-charcoal">Send</strong> in
+          WhatsApp to reach our team.
           {stageConfiguration
-            ? "Your stage configuration is attached — our decorators will respond with ideas and pricing."
-            : "We will reach out to you shortly."}{' '}
-          For an immediate response, WhatsApp us anytime.
+            ? " Your stage configuration is included in the message."
+            : " We will reply as soon as we read it."}
         </p>
+        {handoffHref && (
+          <a
+            href={handoffHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-solid mt-7"
+            aria-label="Open WhatsApp with your enquiry (opens WhatsApp)"
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            Open WhatsApp Again
+          </a>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            handoffStarted.current = false;
+            setStatus("idle");
+          }}
+          className="link-underline mt-5 font-sans text-[11px] font-semibold uppercase tracking-widest2 text-charcoal-muted/70 transition-colors hover:text-charcoal-muted"
+        >
+          Edit your enquiry
+        </button>
       </div>
     );
   }
-
-  const submitting = mutation.isPending;
 
   return (
     <form
@@ -339,16 +349,11 @@ export default function EnquiryForm({
         <input id="enq-company" tabIndex={-1} autoComplete="off" value={form.company} onChange={set("company")} />
       </div>
 
-      <button type="submit" disabled={submitting} className="btn btn-solid mt-8 w-full disabled:opacity-70 sm:w-auto">
-        {submitting ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Sending…
-          </>
-        ) : (
-          "Send Enquiry"
-        )}
+      <button type="submit" className="btn btn-solid mt-8 w-full sm:w-auto">
+        Send Enquiry
       </button>
       <p className="mt-4 text-xs leading-relaxed text-charcoal-muted/70">
+        Send Enquiry opens WhatsApp with your details already filled in — press Send there to reach us.
         Your details are used only to respond to your enquiry.
       </p>
     </form>
