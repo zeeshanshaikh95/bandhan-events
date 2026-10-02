@@ -38,12 +38,17 @@ export interface ImageManifestEntry {
 
 export type ImageManifest = Record<string, ImageManifestEntry | undefined>;
 
-const img = (src: string, alt: string): SiteImage => ({
-  src,
-  alt,
-  width: 1600,
-  height: 1067,
-});
+/**
+ * Declares a photograph. `width`/`height` are the source's native pixels; they
+ * reserve the correct space before the file loads, so they decide the rendered
+ * aspect ratio. The defaults match the original placeholder photography.
+ */
+const img = (
+  src: string,
+  alt: string,
+  width = 1600,
+  height = 1067
+): SiteImage => ({ src, alt, width, height });
 
 export const images = {
   hero: img("/images/hero.webp", "Elegant banquet hall dressed for an evening celebration"),
@@ -92,6 +97,127 @@ export const images = {
 
   // Prayer / prarthana sabha
   candleDiya: img("/images/candle-1.webp", "Candles and diyas at a prayer gathering"),
+
+  // ---------------------------------------------------------------------------
+  // GALLERY — real Bandhan Events photography
+  // Supplied by the client and re-encoded to WebP in public/images. Unlike the
+  // placeholder set above these remain in their native proportions, so the
+  // gallery grid can lay them out without cropping the frames.
+  // ---------------------------------------------------------------------------
+  galleryWeddingFloralStage: img(
+    "/images/wedding-floral-stage-loveseat.webp",
+    "Floral wedding stage dressed with pink and white blossoms, an ornate loveseat and a hanging floral arch",
+    1122,
+    1402
+  ),
+  galleryBanquetEntrance: img(
+    "/images/banquet-entrance-drape.webp",
+    "Draped venue entrance with white and gold curtains, floral arrangements and welcome signage",
+    1200,
+    675
+  ),
+  galleryBirthdayNeonGlow: img(
+    "/images/birthday-neon-glow-stage.webp",
+    "Birthday stage with neon lighting, balloon clusters and a glowing monogram backdrop",
+    1122,
+    1402
+  ),
+  galleryWeddingPinkFloralStage: img(
+    "/images/wedding-pink-floral-stage.webp",
+    "Wedding stage with a pink blossom backdrop, floral arch and a sofa for the couple",
+    1200,
+    800
+  ),
+  galleryCorporateGalaStage: img(
+    "/images/corporate-golden-gala-stage.webp",
+    "Corporate gala stage with a draped backdrop, screen and rows of guest seating",
+    1092,
+    1440
+  ),
+  galleryFloralChandelierBackdrop: img(
+    "/images/decor-floral-chandelier-backdrop.webp",
+    "Hanging floral chandelier backdrop in pink and white above a stage",
+    1122,
+    1402
+  ),
+  galleryBirthdayRoseGoldStage: img(
+    "/images/birthday-rose-gold-stage.webp",
+    "Rose-gold birthday stage with a balloon arch and illuminated milestone numerals",
+    1122,
+    1402
+  ),
+  galleryBanquetRoundTables: img(
+    "/images/banquet-golden-round-tables.webp",
+    "Golden draped banquet hall set with round tables, dressed chairs and a buffet line",
+    1092,
+    1440
+  ),
+  galleryBirthdayPinkFloralStage: img(
+    "/images/birthday-pink-floral-stage.webp",
+    "Pink floral birthday stage with a balloon arch and a personalised backdrop",
+    1122,
+    1402
+  ),
+  galleryBlossomStageBackdrop: img(
+    "/images/decor-blossom-stage-backdrop.webp",
+    "Stage backdrop of cascading white blossoms above an upholstered loveseat",
+    1200,
+    771
+  ),
+  galleryBanquetLuxuryBuffet: img(
+    "/images/banquet-luxury-buffet.webp",
+    "Buffet counters dressed in black linen along a draped hall with floral centrepieces",
+    1092,
+    1440
+  ),
+  galleryBirthdayNeonGlowCrazy: img(
+    "/images/birthday-neon-glow-crazy.webp",
+    "Neon birthday backdrop with glowing lettering, hearts and pastel balloon décor",
+    1122,
+    1402
+  ),
+  galleryBanquetTheatreSeating: img(
+    "/images/banquet-golden-theatre-seating.webp",
+    "Golden draped banquet hall arranged with theatre-style seating and a crystal chandelier",
+    1122,
+    1402
+  ),
+  galleryFloralTower: img(
+    "/images/decor-pink-floral-tower.webp",
+    "Tall pink and white floral tower installation with trailing greenery",
+    1122,
+    1402
+  ),
+  galleryBirthdayRoseGoldWelcome: img(
+    "/images/birthday-rose-gold-welcome.webp",
+    "Rose-gold balloon welcome display with a printed birthday board and drapes",
+    1086,
+    1448
+  ),
+  galleryGrandDrapedHall: img(
+    "/images/corporate-grand-draped-hall.webp",
+    "Large draped event hall with warm uplighting and rows of seating",
+    1092,
+    1440
+  ),
+  galleryBanquetAisleSeating: img(
+    "/images/banquet-carpet-aisle-seating.webp",
+    "Carpeted banquet aisle with draped chairs leading towards the stage",
+    1200,
+    675
+  ),
+  galleryBirthdayPinkWelcomeBoard: img(
+    "/images/birthday-pink-welcome-board.webp",
+    "Pink themed birthday welcome board with balloons, streamers and a gift display",
+    1122,
+    1402
+  ),
+  galleryCeremonyWhiteChairs: img(
+    "/images/ceremony-white-chair-setup.webp",
+    "Rows of white-covered chairs arranged for a ceremony",
+    1122,
+    1402
+  ),
 } as const;
 
 /**

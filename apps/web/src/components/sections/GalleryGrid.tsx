@@ -6,8 +6,9 @@ import {
   galleryItems,
   type GalleryCategory,
 } from "@/data/galleryData";
+import type { SiteImage } from "@/data/images";
 import SmartImage from "@/components/ui/SmartImage";
-import { imageSrcSet } from "@/utils/imageSrcSet";
+import { imageIntrinsicSize, imageSrcSet } from "@/utils/imageSrcSet";
 import { publicPath } from "@/utils/publicPath";
 import { cn } from "@/utils/cn";
 
@@ -17,6 +18,9 @@ interface GalleryGridProps {
   /** Hide the category filter (used for previews). */
   showFilter?: boolean;
 }
+
+/** Intrinsic pixel size of a photograph, used to give each frame its own ratio. */
+const getSize = (image: SiteImage) => imageIntrinsicSize(image);
 
 /**
  * Premium masonry-style gallery with category filter and an accessible
@@ -129,16 +133,28 @@ export default function GalleryGrid({ limit, showFilter = true }: GalleryGridPro
             aria-label={`View larger: ${item.alt}`}
             className="group mb-4 block w-full break-inside-avoid text-left"
           >
-            <SmartImage
-              image={item}
+            {/*
+              Each frame takes the photograph's own proportions. The supplied
+              photography is a mix of tall 4:5 event frames and wide 16:9
+              interiors, so anything other than the native ratio would crop
+              stages, signage and buffet lines straight out of the picture. The
+              masonry rhythm comes from that mix of ratios instead of from a
+              fixed tile. `aspectRatio` also reserves the space up front, which
+              is what keeps the columns from jumping as images arrive.
+            */}
+            <div
               className="w-full"
-              imgClassName={cn(
-                // Varied editorial heights for the masonry rhythm
-                i % 5 === 0 ? "aspect-[3/4]" : i % 3 === 0 ? "aspect-square" : "aspect-[4/3]",
-                "transition duration-700 group-hover:scale-[1.03]"
-              )}
-              sizes="(min-width: 768px) 33vw, 50vw"
-            />
+              style={{
+                aspectRatio: `${getSize(item).width} / ${getSize(item).height}`,
+              }}
+            >
+              <SmartImage
+                image={item}
+                className="h-full w-full"
+                imgClassName="transition duration-700 group-hover:scale-[1.03]"
+                sizes="(min-width: 768px) 33vw, 50vw"
+              />
+            </div>
             {item.caption && (
               <span className="mt-2 block font-serif text-sm italic text-charcoal-muted/80">
                 {item.caption}
