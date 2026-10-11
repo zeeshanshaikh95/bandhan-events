@@ -8,8 +8,14 @@
   deep links and refreshes work without a server.
 
   KEEP = leading path segments that form the site base:
-    - project page (/bandhan-events/) → 1
-    - custom domain (base "/")        → 0
+    - custom domain (base "/", e.g. https://bandhanevents.online/) → 0
+    - project page (/bandhan-events/, base "/bandhan-events/")     → 1
+
+  MUST match the VITE_BASE the site is built with (see
+  .github/workflows/deploy-pages.yml). The site is served at the root of the
+  custom domain, so the base is "/" and KEEP is 0: a wrong value makes the
+  rewrite produce a URL that 404s again, so every deep link loops instead of
+  loading.
 -->
 <html lang="en">
   <head>
@@ -17,7 +23,7 @@
     <meta name="robots" content="noindex" />
     <title>Bandhan Events</title>
     <script>
-      var KEEP = 1;
+      var KEEP = 0;
       var l = window.location;
       l.replace(
         l.protocol +
