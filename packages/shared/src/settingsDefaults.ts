@@ -14,7 +14,7 @@ export interface BusinessSettings {
     tagline: string;
   };
   contact: {
-    /** Shown as written when no dialable number is confirmed yet. */
+    /** Shown on the website exactly as written, e.g. "+91 98200 80526". */
     phoneDisplay: string;
     /** Optional dialable number in E.164, digits only for wa.me links. */
     whatsappNumber: string;
@@ -53,9 +53,11 @@ export const DEFAULT_BUSINESS_SETTINGS: BusinessSettings = {
     tagline: "Celebrations for a Lifetime",
   },
   contact: {
-    // TODO: owners to confirm the real numbers, email and Instagram handle.
-    phoneDisplay: "Coming Soon",
-    whatsappNumber: "",
+    // Official number confirmed by the owners: displayed as written, and used
+    // as the dialable/WhatsApp number in digits with country code.
+    // TODO: owners to confirm the email address and Instagram handle.
+    phoneDisplay: "+91 98200 80526",
+    whatsappNumber: "919820080526",
     email: "Coming Soon",
     instagramUrl: "https://www.instagram.com/",
     instagramHandle: "@bandhanevents",

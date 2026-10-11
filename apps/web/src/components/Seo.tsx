@@ -19,7 +19,7 @@ interface SeoProps {
 export default function Seo({ route, breadcrumbs }: SeoProps) {
   const location = useLocation();
   // Business values are editable in the dashboard, so structured data follows them.
-  const { address } = useBusinessSettings();
+  const { address, contact } = useBusinessSettings();
   const key = route ?? location.pathname;
   const seo = seoByRoute[key];
   // Unknown routes (i.e. the 404 page) must not claim the homepage's title or
@@ -56,7 +56,7 @@ export default function Seo({ route, breadcrumbs }: SeoProps) {
       {/* Organization + LocalBusiness/EventVenue structured data on every route */}
       <script type="application/ld+json">{JSON.stringify(buildOrganizationJsonLd(address))}</script>
       <script type="application/ld+json">
-        {JSON.stringify(buildLocalBusinessJsonLd(address))}
+        {JSON.stringify(buildLocalBusinessJsonLd(address, contact.whatsappNumber))}
       </script>
       {breadcrumbs && (
         <script type="application/ld+json">

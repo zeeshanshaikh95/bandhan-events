@@ -15,7 +15,7 @@ export const siteConfig = {
   name: "Bandhan Events",
   legalName: "Bandhan Events",
   tagline: "Celebrations for a Lifetime",
-  url: env.VITE_SITE_URL ?? "https://bandhanevents.in",
+  url: env.VITE_SITE_URL ?? "https://bandhanevents.online",
   /** Default social share image (lives in /public). */
   ogImage: "/og-image.png",
 
@@ -31,8 +31,9 @@ export const siteConfig = {
   },
 
   contact: {
-    // TODO: Replace with the real phone number when the owners confirm it.
-    phoneDisplay: env.VITE_CONTACT_PHONE_DISPLAY ?? "Coming Soon",
+    // Official number confirmed by the owners. Shown as written here; the
+    // dialable/WhatsApp form below carries the country code.
+    phoneDisplay: env.VITE_CONTACT_PHONE_DISPLAY ?? "+91 98200 80526",
     // WhatsApp business number (digits only, with country code).
     whatsappNumber: env.VITE_WHATSAPP_NUMBER ?? "919820080526",
     // TODO: Replace with the real email address when confirmed.

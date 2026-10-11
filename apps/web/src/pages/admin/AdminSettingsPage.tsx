@@ -291,7 +291,7 @@ export default function AdminSettingsPage() {
               label="Phone (displayed)"
               required
               disabled={!canWrite}
-              hint="Use “Coming Soon” until the number is confirmed."
+              hint="Shown on the website, e.g. +91 98200 80526."
               error={message(errors.contact?.phoneDisplay)}
               {...register("contact.phoneDisplay")}
             />

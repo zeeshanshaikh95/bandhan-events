@@ -70,7 +70,7 @@ S3 + CDN). Two things matter:
 1. **SPA fallback:** rewrite unknown paths to `/index.html`, otherwise deep
    links like `/banquet-catering` return 404. Netlify: `/* /index.html 200`.
 2. **Update `public/robots.txt` and `public/sitemap.xml`** if the domain
-   differs from `https://bandhanevents.in`.
+   differs from `https://bandhanevents.online`.
 
 ## Performance & accessibility notes
 

@@ -77,7 +77,7 @@ const envSchema = z.preprocess(
 
   // Mail (optional — the platform never pretends an email was sent)
   EMAIL_PROVIDER: z.enum(["console", "smtp"]).default("console"),
-  EMAIL_FROM: z.string().default("Bandhan Events <no-reply@bandhanevents.in>"),
+  EMAIL_FROM: z.string().default("Bandhan Events <no-reply@bandhanevents.online>"),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().int().optional(),
   SMTP_USER: z.string().optional(),

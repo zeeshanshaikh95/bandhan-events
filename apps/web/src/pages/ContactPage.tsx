@@ -67,9 +67,19 @@ export default function ContactPage() {
                   <Phone className="mt-1 h-5 w-5 shrink-0 text-gold-deep" aria-hidden="true" />
                   <div>
                     <p className="font-sans text-[11px] font-semibold uppercase tracking-widest2 text-charcoal-muted">Phone</p>
-                    <p className="mt-2 text-[15px] text-charcoal-muted">
-                      {settings.contact.phoneDisplay}
-                    </p>
+                    {settings.phoneHref ? (
+                      <a
+                        href={settings.phoneHref}
+                        aria-label={`Call ${settings.contact.phoneDisplay}`}
+                        className="link-underline mt-2 inline-block text-[15px] text-forest"
+                      >
+                        {settings.contact.phoneDisplay}
+                      </a>
+                    ) : (
+                      <p className="mt-2 text-[15px] text-charcoal-muted">
+                        {settings.contact.phoneDisplay}
+                      </p>
+                    )}
                   </div>
                 </li>
                 <li className="flex gap-4">

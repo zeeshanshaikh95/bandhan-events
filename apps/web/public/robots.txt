@@ -6,4 +6,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://bandhanevents.in/sitemap.xml
+Sitemap: https://bandhanevents.online/sitemap.xml

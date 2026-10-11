@@ -101,8 +101,18 @@ function postalAddress(address: AddressLike) {
   };
 }
 
-/** LocalBusiness / EventVenue / Organization structured data (factual only). */
-export function buildLocalBusinessJsonLd(address: AddressLike = siteConfig.address) {
+/**
+ * LocalBusiness / EventVenue structured data (factual only).
+ *
+ * `dialableNumber` comes from business settings in digits with the country
+ * code, so the published number and its structured data cannot drift apart.
+ */
+export function buildLocalBusinessJsonLd(
+  address: AddressLike = siteConfig.address,
+  dialableNumber?: string
+) {
+  const digits = (dialableNumber ?? "").replace(/\D/g, "");
+  const telephone = digits.length >= 8 ? `+${digits}` : undefined;
   return {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "EventVenue"],
@@ -111,6 +121,7 @@ export function buildLocalBusinessJsonLd(address: AddressLike = siteConfig.addre
     slogan: siteConfig.tagline,
     url: siteConfig.url,
     image: `${siteConfig.url}${siteConfig.ogImage}`,
+    ...(telephone ? { telephone } : {}),
     description:
       "Bandhan Events offers wedding decoration, event decor, banquet and catering services in Mulund West, Mumbai.",
     address: postalAddress(address),

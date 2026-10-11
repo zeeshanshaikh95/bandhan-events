@@ -84,7 +84,16 @@ export default function Footer() {
           <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
             <li className="flex items-center gap-3">
               <Phone className="h-4 w-4 shrink-0 text-gold-soft" aria-hidden="true" />
-              <span>{settings.contact.phoneDisplay}</span>
+              {settings.phoneHref ? (
+                <a
+                  href={settings.phoneHref}
+                  className="link-underline transition hover:text-ivory"
+                >
+                  {settings.contact.phoneDisplay}
+                </a>
+              ) : (
+                <span>{settings.contact.phoneDisplay}</span>
+              )}
             </li>
             {whatsappHref && (
               <li className="flex items-center gap-3">

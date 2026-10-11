@@ -25,6 +25,11 @@ export interface ResolvedSettings extends PublicBusinessSettings {
   formattedAddress: string;
   /** Google Maps search link (no API key required). */
   mapsLink: string;
+  /**
+   * Click-to-call link built from the dialable number, or null when no number
+   * is configured — components then render plain text, never a dead link.
+   */
+  phoneHref: string | null;
 }
 
 const FALLBACK: PublicBusinessSettings = {
@@ -59,6 +64,7 @@ function resolve(settings?: PublicBusinessSettings): ResolvedSettings {
     instagramHandle: pickValue(source.contact?.instagramHandle, FALLBACK.contact.instagramHandle),
   };
   const address = { ...FALLBACK.address, ...source.address };
+  const dialableNumber = contact.whatsappNumber.replace(/\D/g, "");
 
   const formattedAddress = [
     address.street,
@@ -75,6 +81,8 @@ function resolve(settings?: PublicBusinessSettings): ResolvedSettings {
     mapsLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       `${FALLBACK.brand.name}, ${formattedAddress}`
     )}`,
+    // Already carries the country code, so tel: only needs the leading "+".
+    phoneHref: dialableNumber.length >= 8 ? `tel:+${dialableNumber}` : null,
   };
 }
 
