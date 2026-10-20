@@ -6,6 +6,7 @@ import App from "@/App";
 import QueryProvider from "@/providers/QueryProvider";
 import { SettingsProvider } from "@/providers/SettingsProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
+import "@/compat/safari9-polyfills";
 import "@/styles/index.css";
 
 /**

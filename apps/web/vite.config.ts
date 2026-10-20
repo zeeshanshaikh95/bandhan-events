@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
+import legacy from "@vitejs/plugin-legacy";
 import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config/
@@ -15,7 +16,16 @@ export default defineConfig(({ mode }) => {
     // build time to rebase every asset and route onto it. Local dev and
     // same-origin production hosts keep the default "/".
     base: process.env.VITE_BASE || env.VITE_BASE || "/",
-    plugins: [react()],
+    plugins: [
+      react(),
+      // iOS 9.3.5 Safari compatibility (compat-only change): modern browsers
+      // keep the exact same type="module" bundle as before; this additionally
+      // emits a separate nomodule bundle — transpiled for Safari >= 9 and
+      // prefixed with core-js/regenerator — that old Safari runs instead.
+      legacy({
+        targets: ["safari >= 9"],
+      }),
+    ],
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
